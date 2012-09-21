@@ -1,0 +1,19 @@
+{% include "include/includeCss.html" %}
+{% include "include/includeJs.html" %}
+<div class="well sidebar-nav" style="min-height: 600px;">
+	<ul class="nav nav-list">
+<!-- 		<li class="active"><a href="#">Link</a></li> -->
+		
+		{% for app,collections in appDict.items  %}
+            <li class="nav-header">{{app}}</li>
+            {% for item in collections  %}
+            	<li class="non-active ">
+            		<a onclick="$('.non-active').removeClass('active');
+            					$(this).parent().addClass('active')
+            					" 
+            		   href="/contents/view/{{item.app_id}}/{{item.model_name}}" target="main">{{item.display_name}}</a></li>
+            {% endfor %}
+    	{% endfor %}
+		
+	</ul>
+</div>

@@ -1,0 +1,16 @@
+Field types:
+	BooleanField
+	CharField
+	TextField
+	DateField
+	DateTimeField
+	EmailField
+	FileField
+	ImageField
+	IntegerField
+	IPAddressField
+	URLField
+Field options:
+	default
+	null
+	choices
