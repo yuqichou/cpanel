@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% include "include/includeCss.html" %}
 {% include "include/includeJs.html" %}
 <div class="well sidebar-nav" style="min-height: 600px;">
@@ -11,7 +12,7 @@
             		<a onclick="$('.non-active').removeClass('active');
             					$(this).parent().addClass('active')
             					" 
-            		   href="/contents/view/{{item.app_id}}/{{item.model_name}}" target="main">{{item.display_name}}</a></li>
+            		   href="/contents/{{item.app_id}}/{{item.model_name}}/view" target="main">{{item.display_name}}</a></li>
             {% endfor %}
     	{% endfor %}
 		

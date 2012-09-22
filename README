@@ -2,14 +2,14 @@ Field types:
 	BooleanField
 	CharField
 	TextField
+	IntegerField
+	
 	DateField
 	DateTimeField
-	EmailField
+	
 	FileField
 	ImageField
-	IntegerField
-	IPAddressField
-	URLField
+	
 Field options:
 	default
 	null

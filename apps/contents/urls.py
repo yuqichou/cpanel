@@ -10,8 +10,10 @@ contents_urlpatterns = patterns('',
     url(r'^mainFrame.html','django.views.generic.simple.direct_to_template',{'template': 'mainFrame.html'}),
     url(r'^leftMenu.html', 'apps.contents.views.left_catalogues'),
     
-    url(r'^view/(?P<app_id>\w+)/(?P<model_name>\w+)/$','apps.contents.views.view_page'),
-    
+    url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/view/$','apps.contents.views.view_page'),
+    url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/add/$','apps.contents.views.add_page'),
+    url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/save/$','apps.contents.views.save_model_data'),
+    url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/(?P<id>\w+)/del/$','apps.contents.views.del_model_data'),
 )
 
 

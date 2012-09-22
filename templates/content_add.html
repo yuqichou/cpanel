@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% include "include/includeCss.html" %} 
+{% include "include/includeJs.html" %}
+
+<style>
+	body {
+		margin: 30px;
+	}
+</style>
+
+
+<div class="container-fluid">
+		 <div class="row-fluid">
+			<div class="span12">
+				<form method="post" class="form-horizontal" id="addModelDataForm" action="/contents/{{app_id}}/{{model_name}}/save/">
+					{% csrf_token %}
+					<fieldset>
+						<div id="legend" class="">
+							<legend class="">
+								<h5>添加 {{model_display_name}}</h5>
+							</legend>
+						</div>
+						
+						{% for field in fields %}
+						<div class="control-group">
+							<label class="control-label" for="input01">
+								{{field.display_name}}
+								{%if not field.field_option.null %}
+									<span class="label label-important">必填</span>
+								{% endif %}
+							</label>
+							<div class="controls">
+							
+								{% if field.field_option.choices  %}
+									<select name="{{field.field_name}}" class="
+										{%if not field.field_option.null %}required{% endif %}
+									" >
+										{% for choice in field.field_option.choices %}
+											<option>{{choice}}</option>
+										{% endfor %}
+									</select>
+									
+								{% elif 'TextField' in field.field_type  %}	
+									<textarea name="{{field.field_name}}" rows="5" class="
+										{%if not field.field_option.null %}required{% endif %}
+									input-xlarge checkWidget" > </textarea>
+									
+								{% elif 'CharField' in field.field_type or 'IntegerField' in field.field_type  %}
+									<input type="text" name="{{field.field_name}}" class="
+										   {%if not field.field_option.null %}required{% endif %}"   
+										   placeholder="请输入{{field.display_name}}" >
+									
+									
+								{% elif 'BooleanField' in field.field_type  %}	
+									  	<select name="{{field.field_name}}">
+												<option value="1">是</option>
+												<option value="0">否</option>
+										</select>
+								
+								{% elif 'DateField' in field.field_type  %}	
+									<input class="{%if not field.field_option.null %}required{% endif %}" name="{{field.field_name}}" class="input-small uneditable-input checkWidget" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" type="text" placeholder="选择日期" >
+
+
+								{% endif %}
+							</div>
+						</div>
+						{% endfor %}
+						
+						
+						
+
+						
+						
+						
+						<div class="form-actions">
+				            <a onclick="submitForm()" class="btn btn-primary">保存</a>
+				            <a onclick="javascript:window.history.back();" class="btn">返回</a>
+			          	</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+</div>
+
+
+<script>
+	
+	function submitForm(){
+		if(!$("#addModelDataForm").valid()){
+			return;
+		}
+		$('#addModelDataForm').submit();
+	}
+	
+	$().ready(function() {
+		$("#addModelDataForm").validate({
+			showErrors: customShowErrors,
+			onfocusout:false,
+			onkeyup:false,
+			onclick:false
+		});
+		
+	});
+</script>
+
+
+
+

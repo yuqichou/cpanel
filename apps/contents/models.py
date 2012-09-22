@@ -34,12 +34,19 @@ def find_model_scheme(appid,model_name):
             break 
     
     return tempModel
-    
+
+
+'''
+保存
+'''
+def save_model(app_id,model_name,saveObj):
+    collection=mongo_util.get_mongo_collection(app_id+"_"+model_name)
+    collection.insert(saveObj)
 
         
-        
-        
-        
+def find_models(app_id,model_name,**pageConfig):
+    collection=mongo_util.get_mongo_collection(app_id+"_"+model_name)
+    return collection.find()
         
         
         
