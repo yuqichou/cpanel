@@ -14,3 +14,7 @@ Field options:
 	default
 	null
 	choices
+	
+	
+	
+json editor tools please visite: '/static/JSONeditor/JSONeditor.html'

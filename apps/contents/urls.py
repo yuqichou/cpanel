@@ -13,7 +13,7 @@ contents_urlpatterns = patterns('',
     url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/view/$','apps.contents.views.view_page'),
     url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/add/$','apps.contents.views.add_page'),
     url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/save/$','apps.contents.views.save_model_data'),
-    url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/(?P<id>\w+)/del/$','apps.contents.views.del_model_data'),
+    url(r'^(?P<app_id>\w+)/(?P<model_name>\w+)/(?P<objid>\w+)/del/$','apps.contents.views.del_model_data'),
 )
 
 

@@ -1,0 +1,19 @@
+{
+	"app_id" : "",
+	"models" : [{
+				"model_name" : "",
+				"display_name" : "",
+				"single_data" : false,
+				"list_display" : [''],
+				"fields" : [{
+							"field_name" : "",
+							"field_type" : "",
+							"display_name" : "",
+							"field_option" : {
+								"null" : false,
+								"default" : null,
+								"choices" : []
+							}
+						}]
+			}]
+}

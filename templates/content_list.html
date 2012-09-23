@@ -19,6 +19,13 @@ body {
   	<div class="row">
   		<div class="span12">
   			&nbsp;
+  			{% if messages %}
+			    {% for message in messages %}
+			    <div class="alert alert-info">
+  					<strong>{{ message }}</strong>
+            	</div>
+			    {% endfor %}
+			{% endif %}
   		</div>
   	</div>
   	<div class="row">
@@ -50,7 +57,10 @@ body {
 						{% endfor %}
 						<td>
 							<a class="btn btn-info">修改</a>
-							<a onclick="alert('/contents/{{app_id}}/{{model_name}}/del/{{model_data._id}}')" class="btn btn-danger">删除</a>
+							{% load custom_filter %}
+							<a onclick="javascript:delModel(this);" href="javascript:void(0);" url="/contents/{{app_id}}/{{model_name}}/{{ model_data|get_underscores_attr:'_id' }}/del"  class="btn btn-danger" data-toggle="modal">
+								删除
+							</a>
 						</td>
 					</tr>
 					{% endfor %}
@@ -58,11 +68,38 @@ body {
 			</table>
 	    </div>
     </div>
+    <div class="row">
+	    <div class="span12">
+	    	{% include "include/includePagination.html" %}
+	    </div>
+	</div>
+    
+    
+    
   </div>
 </div>
 
 
+<div class="modal" style="display: none" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">确认删除数据?</h3>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button onclick="javascript:doDel();" class="btn btn-primary">删除</button>
+  </div>
+</div>
 
-
-
-
+<script>
+	var delUrl='';
+	function delModel(obj){
+		$('#myModal').modal({keyboard: false});
+		$('#myModal').show();
+		delUrl=$(obj).attr("url");
+	}
+	
+	function doDel(){
+		window.location=delUrl;
+	}
+</script>

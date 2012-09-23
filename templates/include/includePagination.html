@@ -1,16 +1,18 @@
-
-
-
-<div class="pagination">
-	<ul>
-		<li><a href="?page=1&pageSize={{GLOBAL_LIST_PER_PAGE}}">首页</a></li>
-		<li><a
-			href="?page={{ page.previous_page_number }}&pageSize={{GLOBAL_LIST_PER_PAGE}}">上一页</a></li>
-		<li><a>{{ page.number }} / {{ page.paginator.num_pages }}</a></li>
-
-		<li><a
-			href="?page={{ page.next_page_number }}&pageSize={{GLOBAL_LIST_PER_PAGE}}">下一页</a></li>
-		<li><a
-			href="?page={{page.paginator.num_pages}}&pageSize={{GLOBAL_LIST_PER_PAGE}}">末页</a></li>
-	</ul>
-</div>
+					
+					
+					
+					<div class="pagination">
+						  <ul>
+						  	{% if page.hasPrePage %}
+						  		<li><a href="?gotoPage=1&pageSize={{GLOBAL_LIST_PER_PAGE}}">首页</a></li>
+						    	<li><a href="?gotoPage={{ page.prePage }}&pageSize={{GLOBAL_LIST_PER_PAGE}}">上一页</a></li>
+						    {% endif %}
+						    <li><a>{{ page.gotoPage }} / {{ page.countPage }}</a></li>
+						    
+						    {% if page.hasNextPage %}
+						    	<li><a href="?gotoPage={{ page.nextPage }}&pageSize={{GLOBAL_LIST_PER_PAGE}}">下一页</a></li>
+						    	<li><a href="?gotoPage={{page.lastPage}}&pageSize={{GLOBAL_LIST_PER_PAGE}}">末页</a></li>
+						    {% endif %}
+						    	<li><a href="javascript:void(0);">共{{ page.countData }}条记录</a></li>
+						  </ul>
+					</div>

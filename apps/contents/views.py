@@ -2,10 +2,10 @@
 from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 from apps.app.models import App
-from apps.contents.models import find_collections, find_model_scheme, save_model,\
-    find_models
+from apps.contents.models import find_collections, find_model_scheme, save_model, del_model, find_page_models
 import time
 import datetime
+from django.contrib import messages
 
 def main_page(request):
     return render_to_response('main.html',context_instance=RequestContext(request))
@@ -21,7 +21,8 @@ def left_catalogues(request):
     for item in App.objects.all():
         try:
             appDict[item.name]=find_collections(item.appid)
-        except Exception:
+        except Exception,e:
+            print(e)
             pass
         
     return render_to_response('leftMenu.html',
@@ -49,11 +50,21 @@ def view_page(request,app_id,model_name):
             if(field_display in field['field_name']):
                 displays.append(field['display_name'])
                 
-                
-    models=find_models(app_id, model_name)
+    gotoPage = request.GET.get('gotoPage')
+    pageSize = request.GET.get('pageSize')
+    if(gotoPage!=None):
+        gotoPage=int(gotoPage)
+    if(pageSize!=None):
+        pageSize=int(pageSize)
+        
+    
+    page=find_page_models(app_id, model_name,gotoPage=gotoPage,pageSize=pageSize)
+    models=page.data
+    
     modelDict['displays']=displays
     modelDict['list_data']=models
     modelDict['list_display']=list_display
+    modelDict['page']=page
     
     
     return render_to_response('content_list.html',
@@ -89,8 +100,11 @@ def save_model_data(request,app_id,model_name):
                 elif(fieldValue=='0'):
                     fieldValue=False
             elif('DateField' in field['field_type']):
-                date=time.strptime(fieldValue, "%Y-%m-%d")
-                fieldValue=datetime.datetime(date[0], date[1],date[2])
+                try:
+                    date=time.strptime(fieldValue, "%Y-%m-%d")
+                    fieldValue=datetime.datetime(date[0], date[1],date[2])
+                except Exception:
+                    pass
             elif('IntegerField' in field['field_type']):
                 try:
                     fieldValue=int(fieldValue)
@@ -99,14 +113,15 @@ def save_model_data(request,app_id,model_name):
         saveObj[field['field_name']]=fieldValue
     save_model(app_id,model_name,saveObj)
         
+    messages.add_message(request, messages.INFO, '添加成功')
     return redirect('apps.contents.views.view_page', app_id=app_id,model_name=model_name)
 
 '''
 删除
 '''
-def del_model_data(request,app_id,model_name,id):
-    
-    
+def del_model_data(request,app_id,model_name,objid):
+    del_model(app_id,model_name,objid)
+    messages.add_message(request, messages.INFO, '删除成功')
     return redirect('apps.contents.views.view_page', app_id=app_id,model_name=model_name)
     
     
