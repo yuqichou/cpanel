@@ -6,6 +6,7 @@ from apps.contents.models import find_collections, find_model_scheme, save_model
 import time
 import datetime
 from django.contrib import messages
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 def main_page(request):
     return render_to_response('main.html',context_instance=RequestContext(request))
@@ -110,6 +111,18 @@ def save_model_data(request,app_id,model_name):
                     fieldValue=int(fieldValue)
                 except Exception:
                     pass
+            
+        if('FileField' in field['field_type']):
+            try:
+                uploadFile = request.FILES.get(field['field_name'])
+                if(uploadFile!=None):
+                    destination = open('c:/'+uploadFile.name, 'wb+')
+                    for chunk in uploadFile.chunks():
+                        destination.write(chunk)
+                    destination.close()
+            except Exception:
+                pass    
+            
         saveObj[field['field_name']]=fieldValue
     save_model(app_id,model_name,saveObj)
         
