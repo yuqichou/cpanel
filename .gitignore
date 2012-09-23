@@ -1,0 +1,8 @@
+*.log
+*.pot
+*.pyc
+Thumbs.db
+.project
+.pydevproject
+local_settings.py
+/.settings
