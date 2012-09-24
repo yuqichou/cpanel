@@ -1,12 +1,15 @@
 # coding:utf8
+from apps.app.models import App
+from apps.contents.models import find_collections, find_model_scheme, \
+    find_page_models, save_model, del_model, find_model_data, update_model
+from cpanel import settings
+from django.contrib import messages
 from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
-from apps.app.models import App
-from apps.contents.models import find_collections, find_model_scheme, save_model, del_model, find_page_models
-import time
 import datetime
-from django.contrib import messages
-from django.core.files.uploadedfile import InMemoryUploadedFile
+import os
+import time
+import uuid
 
 def main_page(request):
     return render_to_response('main.html',context_instance=RequestContext(request))
@@ -93,35 +96,8 @@ def save_model_data(request,app_id,model_name):
     saveObj=dict()
     for field in fields:
         fieldValue=request.POST.get(field['field_name'])
+        fieldValue=__handle_field__(fieldValue,field,request)
         
-        if(fieldValue!=None):
-            if('BooleanField' in field['field_type']):
-                if(fieldValue=='1'):
-                    fieldValue=True
-                elif(fieldValue=='0'):
-                    fieldValue=False
-            elif('DateField' in field['field_type']):
-                try:
-                    date=time.strptime(fieldValue, "%Y-%m-%d")
-                    fieldValue=datetime.datetime(date[0], date[1],date[2])
-                except Exception:
-                    pass
-            elif('IntegerField' in field['field_type']):
-                try:
-                    fieldValue=int(fieldValue)
-                except Exception:
-                    pass
-            
-        if('FileField' in field['field_type']):
-            try:
-                uploadFile = request.FILES.get(field['field_name'])
-                if(uploadFile!=None):
-                    destination = open('c:/'+uploadFile.name, 'wb+')
-                    for chunk in uploadFile.chunks():
-                        destination.write(chunk)
-                    destination.close()
-            except Exception:
-                pass    
             
         saveObj[field['field_name']]=fieldValue
     save_model(app_id,model_name,saveObj)
@@ -137,5 +113,76 @@ def del_model_data(request,app_id,model_name,objid):
     messages.add_message(request, messages.INFO, '删除成功')
     return redirect('apps.contents.views.view_page', app_id=app_id,model_name=model_name)
     
+'''
+编辑页面
+'''
+def edit_page(request,app_id,model_name,objid):
+    modelScheme=find_model_scheme(app_id, model_name)
+    model=find_model_data(app_id,model_name,objid)
+    
+    return render_to_response('content_edit.html',
+                              {'model':model,
+                               'app_id':app_id,
+                               'fields':modelScheme['fields'],
+                               'model_name':model_name,
+                               'model_display_name':modelScheme['display_name']},
+                               context_instance=RequestContext(request))
+
+
+def update_model_data(request,app_id,model_name,objid):
+    modelScheme=find_model_scheme(app_id, model_name)
+    fields=modelScheme['fields']
+    updateObj=dict()
+    for field in fields:
+        fieldValue=request.POST.get(field['field_name'])
+        fieldValue=__handle_field__(fieldValue,field,request)
+        updateObj[field['field_name']]=fieldValue
+        
+    update_model(app_id,model_name,objid,updateObj)
+        
+    messages.add_message(request, messages.INFO, '修改成功')
+    return redirect('apps.contents.views.edit_page', app_id=app_id,model_name=model_name,objid=objid)
     
     
+    
+def __handle_field__(fieldValue,field,request):
+    if(fieldValue!=None):
+        if('BooleanField' in field['field_type']):
+            if(fieldValue=='1'):
+                fieldValue=True
+            elif(fieldValue=='0'):
+                    fieldValue=False
+        elif('DateField' in field['field_type']):
+            try:
+                date=time.strptime(fieldValue, "%Y-%m-%d")
+                fieldValue=datetime.datetime(date[0], date[1],date[2])
+            except Exception:
+                pass
+        elif('IntegerField' in field['field_type']):
+            try:
+                fieldValue=int(fieldValue)
+            except Exception:
+                pass
+            
+    if('FileField' in field['field_type']):
+        try:
+            uploadFile = request.FILES.get(field['field_name'])
+            if(uploadFile!=None):
+                datePath=time.strftime("%Y/%m/%d/", time.localtime())
+                savePath=settings.MEDIA_ROOT+datePath
+                fileName=str(uuid.uuid1())+"."+uploadFile.name.split(".")[-1]
+                
+                if(not os.path.exists(savePath)):
+                    os.makedirs(savePath)
+                    
+                destination = open((savePath+fileName), 'wb+')
+                for chunk in uploadFile.chunks():
+                    destination.write(chunk)
+                destination.close()
+                    
+                fieldValue=settings.MEDIA_URL+datePath+fileName
+        except Exception,e:
+            print(e)
+            pass    
+        
+    return fieldValue

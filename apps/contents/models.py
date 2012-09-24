@@ -76,8 +76,18 @@ def del_model(app_id,model_name,objid):
     
         
 
+def find_model_data(app_id,model_name,objid):
+    collection=mongo_util.get_mongo_collection(app_id+"_"+model_name)
+    return collection.find_one({"_id":ObjectId(str(objid))})
 
 
-
-
+def update_model(app_id,model_name,objid,updateDict):
+    collection=mongo_util.get_mongo_collection(app_id+"_"+model_name)
+    collection.update({"_id":ObjectId(str(objid))}, {"$set": updateDict})
+    
+    
+    
+    
+    
+    
 

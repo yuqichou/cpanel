@@ -1,6 +1,6 @@
 					
 					
-					
+				{% if page.countData > 0 %}
 					<div class="pagination">
 						  <ul>
 						  	{% if page.hasPrePage %}
@@ -16,3 +16,4 @@
 						    	<li><a href="javascript:void(0);">共{{ page.countData }}条记录</a></li>
 						  </ul>
 					</div>
+				{% endif %}

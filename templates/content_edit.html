@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% include "include/includeCss.html" %} 
+{% include "include/includeJs.html" %}
+{% load custom_filter %}
+
+<style>
+	body {
+		margin: 30px;
+	}
+</style>
+
+
+<div class="container-fluid">
+		 <div class="row-fluid">
+		 	<div class="row">
+		  		<div class="span12">
+		  			&nbsp;
+		  			{% if messages %}
+					    {% for message in messages %}
+					    <div class="alert alert-info">
+		  					<strong>{{ message }}</strong>
+		            	</div>
+					    {% endfor %}
+					{% endif %}
+		  		</div>
+		  	</div>
+		 
+		 
+		 <div class="row-fluid">
+		 	<div class="row">
+				<div class="span12">
+					<form method="post" enctype="multipart/form-data" class="form-horizontal" id="addModelDataForm" action="/contents/{{app_id}}/{{model_name}}/{{ model|get_attr:'_id' }}/update/">
+						{% csrf_token %}
+						<fieldset>
+							<div id="legend" class="">
+								<legend class="">
+									<h5>修改 {{model_display_name}}</h5>
+								</legend>
+							</div>
+							
+							{% include "include/content_fields.html" %}		
+							
+	
+							
+							
+							
+							<div class="form-actions">
+					            <a onclick="submitForm()" class="btn btn-primary">保存</a>
+					            <a onclick="javascript:window.history.back();" class="btn">返回</a>
+				          	</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+			
+			
+		</div>
+</div>
+
+
+<script>
+	
+	function submitForm(){
+		if(!$("#addModelDataForm").valid()){
+			return;
+		}
+		$('#addModelDataForm').submit();
+	}
+	
+	$().ready(function() {
+		$("#addModelDataForm").validate({
+			showErrors: customShowErrors,
+			onfocusout:false,
+			onkeyup:false,
+			onclick:false
+		});
+		
+	});
+</script>
+
+
+
+
