@@ -167,6 +167,7 @@ def __handle_field__(fieldValue,field,request):
     if('FileField' in field['field_type']):
         try:
             uploadFile = request.FILES.get(field['field_name'])
+            fieldValue=request.POST.get(field['field_name']+"_path_value")
             if(uploadFile!=None):
                 datePath=time.strftime("%Y/%m/%d/", time.localtime())
                 savePath=settings.MEDIA_ROOT+datePath

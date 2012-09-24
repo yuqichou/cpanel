@@ -50,12 +50,14 @@
 									<input value="{{ model|get_date_attr:field.field_name}}"  class="{%if not field.field_option.null %}required{% endif %}" name="{{field.field_name}}" class="input-small uneditable-input " onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" type="text" placeholder="选择日期" >
 								
 								{% elif 'FileField' in field.field_type  %}	
-									<input type="file" name="{{field.field_name}}"  />
+									<input type="file"  name="{{field.field_name}}"  />
 									{% if  model|get_attr:field.field_name  %}
 										<a target="_blank" onclick="window.open('{{model|get_attr:field.field_name}}')" href="javascript:void(0)">
 											{{model|get_attr:field.field_name}}
 										</a>
 									{% endif %}
+									
+									<input type="hidden" value="{{model|get_attr:field.field_name}}" name="{{field.field_name}}_path_value" />
 								{% endif %}
 							</div>
 						</div>
